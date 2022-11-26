@@ -1,5 +1,7 @@
 using FinancialAssets.WebApp.DbContexts;
 using FinancialAssets.WebApp.Repository;
+using FinancialAssets.WebApp.Services;
+using FinancialAssets.WebApp.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options
     => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IReportBuilder, FullReportBuilder>();
 
 builder.Services.AddControllersWithViews();
 

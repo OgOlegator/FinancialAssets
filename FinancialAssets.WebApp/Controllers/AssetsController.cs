@@ -1,6 +1,7 @@
 ﻿using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using FinancialAssets.WebApp.Services.IServices;
 
 namespace FinancialAssets.WebApp.Controllers
 {
@@ -8,7 +9,7 @@ namespace FinancialAssets.WebApp.Controllers
     {
         private readonly IAssetRepository _repository;
 
-        public AssetsController(IAssetRepository repository)
+        public AssetsController(IAssetRepository repository
         {
             _repository = repository;
         }
@@ -24,7 +25,7 @@ namespace FinancialAssets.WebApp.Controllers
         }
 
         public async Task<IActionResult> AddAsset()
-        {
+        { 
             return View();
         }
 

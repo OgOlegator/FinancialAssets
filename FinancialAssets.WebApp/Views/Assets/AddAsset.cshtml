@@ -1,0 +1,63 @@
+﻿@model FinancialAssets.WebApp.Models.Asset
+
+<form asp-action="AddAsset">
+    <br />
+    <div class="container border p-3">
+        <h1 class=text-black>Add</h1>
+
+        <hr />
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-2">
+                <label asp-for="Name" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Price" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Count" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Count" class="form-control" />
+                <span asp-validation-for="Count" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Operation" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Operation" class="form-control" />
+                <span asp-validation-for="Operation" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Date" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Date" class="form-control"></>
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Marketplace" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Marketplace" class="form-control" />
+                <span asp-validation-for="Marketplace" class="text-danger"></span>
+            </div>
+
+            <div class="col-5 offset-2">
+                <a asp-action="AssetsIndex" class="btn-dark btn form-control">Back to list</a>
+            </div>
+
+            <div class="col 5">
+                <input type="submit" value="Add" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>

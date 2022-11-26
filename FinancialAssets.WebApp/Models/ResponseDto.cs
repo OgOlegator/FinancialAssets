@@ -9,7 +9,7 @@
 
         public string DisplayMessage { get; set; } = "";
 
-        public List<string> ErrorMessages { get; set; }
+        public string ErrorMessages { get; set; }
 
     }
 }

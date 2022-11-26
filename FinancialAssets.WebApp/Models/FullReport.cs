@@ -4,14 +4,13 @@ namespace FinancialAssets.WebApp.Models
 {
     public class FullReport
     {
-
-        public List<AssetReport> Assets { get; set; }
+        public List<AssetReport> Assets { get; set; } = new List<AssetReport>();
 
         [Display(Name = "Потрачено средств")]
         public decimal TotalSpent { get; set; }
 
         [Display(Name = "Продаж на сумму")]
-        public decimal SoldOn { get; set; }
+        public decimal TotalSoldOn { get; set; }
 
         [Display(Name = "Profit")]
         public decimal ProfitPercent { get; set; }  //Разница цен покупки и текущей по всему портфелю
@@ -35,7 +34,10 @@ namespace FinancialAssets.WebApp.Models
         public decimal ProfitPercent { get; set; }
 
         [Display(Name = "Потрачено средств")]
-        public decimal TotalSpent { get; set; }
+        public decimal Spent { get; set; }
+
+        [Display(Name = "Продаж на сумму")]
+        public decimal SoldOn { get; set; }
 
     }
 }

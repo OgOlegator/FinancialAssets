@@ -5,7 +5,7 @@ namespace FinancialAssets.WebApp.Services.IServices
     public interface IReportBuilder
     {
 
-        Task<ResponseDto> Build();
+        Task<ResponseDto> Build(IEnumerable<Asset> listAssets);
 
     }
 }

@@ -9,7 +9,7 @@ namespace FinancialAssets.WebApp.Controllers
     {
         private readonly IAssetRepository _repository;
 
-        public AssetsController(IAssetRepository repository
+        public AssetsController(IAssetRepository repository)
         {
             _repository = repository;
         }

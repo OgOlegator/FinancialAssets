@@ -12,7 +12,7 @@
         @Html.DisplayNameFor(model => model.TotalSoldOn): @Model.TotalSoldOn
     </div>
     <div class="col text-md-start pt-1">
-        @Html.DisplayNameFor(model => model.ProfitPercent): @Model.ProfitPercent
+        @Html.DisplayNameFor(model => model.ProfitPercent): @Model.ProfitPercent%
     </div>
 </p>
 
@@ -60,7 +60,7 @@
                     @Html.DisplayFor(modelItem => asset.CurrentPrice)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => asset.ProfitPercent)
+                    @Html.DisplayFor(modelItem => asset.ProfitPercent)%
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => asset.Spent)

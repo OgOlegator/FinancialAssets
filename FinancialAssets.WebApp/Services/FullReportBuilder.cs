@@ -19,7 +19,7 @@ namespace FinancialAssets.WebApp.Services
                     Assets = assetsReport.ToList(),
                     TotalSpent = assetsReport.Sum(row => row.Spent),
                     TotalSoldOn = assetsReport.Sum(row => row.SoldOn),
-                    //ProfitPercent = ,
+                    ProfitPercent = GetTotalProfit(assetsReport),
                 };
 
                 return new ResponseDto
@@ -76,8 +76,7 @@ namespace FinancialAssets.WebApp.Services
                 try
                 {
                     asset.CurrentPrice = (decimal)coinsData.FirstOrDefault(coin => coin.Symbol == asset.Name).Price;
-                    asset.ProfitPercent = (asset.AvgPrice / asset.CurrentPrice) * 100 - 100;
-                    asset.ProfitPercent = asset.AvgPrice > asset.CurrentPrice ? -asset.ProfitPercent : asset.ProfitPercent;
+                    asset.ProfitPercent = GetProfitInPercent(asset.AvgPrice, asset.CurrentPrice);
                 }
                 catch
                 {
@@ -95,6 +94,18 @@ namespace FinancialAssets.WebApp.Services
             var client = new CoinmarketcapClient("f4c1a066-3bab-4d95-b1a6-e766eb4ddaaa");           //todo скрыть
 
             return client.GetCurrencyBySymbolList(slugList.ToArray());
+        }
+
+        private decimal GetTotalProfit(IEnumerable<AssetReport> assets)
+            => GetProfitInPercent(
+                assets.Sum(asset => asset.AvgPrice * asset.Count), 
+                assets.Sum(asset => asset.CurrentPrice * asset.Count));
+        
+
+        private static decimal GetProfitInPercent(decimal avgPrice, decimal currentPrice)
+        {
+            var profit = (avgPrice / currentPrice) * 100 - 100;
+            return avgPrice > currentPrice ? -profit : profit;
         }
     }
 }

@@ -11,7 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options
     => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
-builder.Services.AddSingleton<IReportBuilder, FullReportBuilder>();
+builder.Services.AddScoped<IReportBuilder, FullReportBuilder>();
 
 builder.Services.AddControllersWithViews();
 

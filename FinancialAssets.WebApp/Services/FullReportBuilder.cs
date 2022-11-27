@@ -1,6 +1,7 @@
 ﻿using FinancialAssets.WebApp.Models;
 using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Services.IServices;
+using NoobsMuc.Coinmarketcap.Client;
 using System.Linq.Expressions;
 
 namespace FinancialAssets.WebApp.Services
@@ -67,8 +68,33 @@ namespace FinancialAssets.WebApp.Services
 
                 listAssetsReport.Add(assetReport);
             }
-            
+
+            var coinsData = GetCoursesCoins(listAssetsReport.Select(asset => asset.Name));
+
+            foreach (var asset in listAssetsReport)
+            {
+                try
+                {
+                    asset.CurrentPrice = (decimal)coinsData.FirstOrDefault(coin => coin.Symbol == asset.Name).Price;
+                    asset.ProfitPercent = (asset.AvgPrice / asset.CurrentPrice) * 100 - 100;
+                    asset.ProfitPercent = asset.AvgPrice > asset.CurrentPrice ? -asset.ProfitPercent : asset.ProfitPercent;
+                }
+                catch
+                {
+                    asset.CurrentPrice = 0;
+                    asset.ProfitPercent = 0;
+                    continue;
+                }
+            }
+
             return listAssetsReport;
+        }
+
+        private IEnumerable<Currency> GetCoursesCoins(IEnumerable<string> slugList)
+        {
+            var client = new CoinmarketcapClient("f4c1a066-3bab-4d95-b1a6-e766eb4ddaaa");           //todo скрыть
+
+            return client.GetCurrencyBySymbolList(slugList.ToArray());
         }
     }
 }

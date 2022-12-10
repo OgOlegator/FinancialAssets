@@ -8,10 +8,19 @@ namespace FinancialAssets.WebApp.Services
 {
     public class FullReportBuilder : IReportBuilder
     {
-        public async Task<ResponseDto> Build(IEnumerable<Asset> listAssets)
+        private readonly IAssetRepository _repository;
+
+        public FullReportBuilder(IAssetRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<ResponseDto> Build()
         {
             try
             {
+                var listAssets = await _repository.GetAssets();
+
                 var assetsReport = await GetAssetsReport(listAssets);
 
                 var fullReport = new FullReport

@@ -26,9 +26,7 @@ namespace FinancialAssets.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReport()
         {
-            var listAssets = await _repository.GetAssets();
-
-            var response = await _builder.Build(listAssets);
+            var response = await _builder.Build();
 
             if(response == null || !response.IsSuccess)
                 return RedirectToAction(nameof(ReportIndex));

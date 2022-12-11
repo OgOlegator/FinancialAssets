@@ -21,7 +21,11 @@ namespace FinancialAssets.WebApp.Controllers
             var assetForView = listAssets
                 .Where(asset => searchAsset == null || asset.Name.Contains(searchAsset));
 
-            return View(assetForView);
+            return View(new AssetViewModel
+            {
+                Assets = assetForView,
+                SearchCoin = searchAsset,
+            });
         }
 
         public async Task<IActionResult> AddAsset()

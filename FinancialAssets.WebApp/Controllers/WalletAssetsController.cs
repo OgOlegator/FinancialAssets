@@ -22,7 +22,12 @@ namespace FinancialAssets.WebApp.Controllers
                 .Where(asset => searchCoin == null || asset.Coin.Contains(searchCoin))
                 .Where(asset => searchWallet == null || asset.Wallet.Contains(searchWallet));
 
-            return View(assetsForView);
+            return View(new WalletAssetIndexViewModel 
+            { 
+                WalletAssets = assetsForView, 
+                SearchCoin = searchCoin, 
+                SearchWallet = searchWallet 
+            });
         }
 
         public async Task<IActionResult> WalletAssetDelete(string coin, string wallet)
@@ -42,17 +47,32 @@ namespace FinancialAssets.WebApp.Controllers
 
         public async Task<IActionResult> AddWalletAsset()
         {
-            return View();
+            return View(new WalletAssetAddViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddWalletAsset(WalletAsset model)
+        public async Task<IActionResult> AddWalletAsset(WalletAssetAddViewModel model)
         {
             if (ModelState.IsValid)
-                await _repository.AddWaletAsset(model);
+                try
+                {
+                    await _repository.AddWaletAsset(model.WalletAsset);
+                }
+                catch (Exception ex)
+                {
+                    return View(new WalletAssetAddViewModel
+                    {
+                        Message = ex.Message,
+                        WalletAsset = model.WalletAsset,
+                    });
+                }
             
-            return View();
+            return View(new WalletAssetAddViewModel
+            {
+                WalletAsset = model.WalletAsset,
+                Message = "Complete"
+            });
         }
 
         public async Task<IActionResult> WalletAssetChange(string coin, string wallet)

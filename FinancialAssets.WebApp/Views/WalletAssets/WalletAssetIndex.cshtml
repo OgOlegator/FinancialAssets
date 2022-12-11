@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FinancialAssets.WebApp.Models.WalletAsset>
+﻿@model FinancialAssets.WebApp.Models.WalletAssetIndexViewModel
 
 @{
     ViewData["Title"] = "WalletAssets";
@@ -6,8 +6,8 @@
 
 <p>
     <form asp-controller="WalletAssets" asp-action="WalletAssetIndex">
-        Coin:        <input type="text" name="searchCoin" />
-        Wallet:      <input type="text" name="searchWallet" />
+        Coin:        <input type="text" name="searchCoin" value="@Model.SearchCoin" />
+        Wallet:      <input type="text" name="searchWallet" value="@Model.SearchWallet" />
         <input type="submit" value="Фильтр" />
     </form>
 </p>
@@ -22,19 +22,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.First().Coin)
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Coin)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Wallet)
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Wallet)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Count)
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Count)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var asset in Model)
+        @foreach (var asset in Model.WalletAssets)
         {
             <tr>
                 <td>

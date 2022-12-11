@@ -1,0 +1,56 @@
+﻿@model IEnumerable<FinancialAssets.WebApp.Models.WalletAsset>
+
+@{
+    ViewData["Title"] = "WalletAssets";
+}
+
+<p>
+    <form asp-controller="WalletAssets" asp-action="WalletAssetIndex">
+        Coin:        <input type="text" name="searchCoin" />
+        Wallet:      <input type="text" name="searchWallet" />
+        <input type="submit" value="Фильтр" />
+    </form>
+</p>
+
+<p>
+    <div class="col text-md-center pt-1">
+        <a asp-action="AddWalletAsset" class="btn btn-outline-dark">Добавить</a>
+    </div>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Coin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Wallet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Count)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var asset in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Coin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Wallet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Count)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "WalletAssetDelete", new { coin = asset.Coin, wallet = asset.Wallet })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -11,7 +11,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options
     => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IWalletAssetRepository, WalletAssetRepository>();
 builder.Services.AddScoped<IReportBuilder, FullReportBuilder>();
+builder.Services.AddSingleton<ICacheReport, CacheReport>();
 
 builder.Services.AddControllersWithViews();
 

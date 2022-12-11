@@ -39,7 +39,6 @@ namespace FinancialAssets.WebApp.Controllers
             return View(model);
         }
 
-        //Наверное лучше если метод будет ПОСТ
         public async Task<IActionResult> AssetDelete(int id)
         {
             var asset = await _repository.GetAssetById(id);

@@ -1,8 +1,8 @@
-﻿@*@model FinancialAssets.WebApp.Models.FullReport
+﻿@model FinancialAssets.WebApp.Models.FullReport
 
 @{
     ViewData["Title"] = "Report";
-}*@
+}
 
 <p>
     <div class="col text-md-center pt-1">
@@ -10,7 +10,7 @@
     </div>
 </p>
 
-@*<p>
+<p>
     <div class="col text-md-start pt-1">
         @Html.DisplayNameFor(model => model.TotalSpent): @Model.TotalSpent
     </div>
@@ -18,7 +18,7 @@
         @Html.DisplayNameFor(model => model.TotalSoldOn): @Model.TotalSoldOn
     </div>
     <div class="col text-md-start pt-1">
-        @Html.DisplayNameFor(model => model.ProfitPercent): @Model.ProfitPercent
+        @Html.DisplayNameFor(model => model.ProfitPercent): @Model.ProfitPercent%
     </div>
 </p>
 
@@ -66,7 +66,7 @@
                     @Html.DisplayFor(modelItem => asset.CurrentPrice)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => asset.ProfitPercent)
+                    @Html.DisplayFor(modelItem => asset.ProfitPercent)%
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => asset.Spent)
@@ -79,4 +79,3 @@
     </tbody>
 </table>
 
-*@

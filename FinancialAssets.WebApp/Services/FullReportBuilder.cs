@@ -73,7 +73,9 @@ namespace FinancialAssets.WebApp.Services
                     }
                 }
 
-                assetReport.AvgPrice = (assetReport.Spent + assetReport.SoldOn) / assetReport.Count;
+                //Учитываем возможное деление на 0
+                if(assetReport.Count != 0)
+                    assetReport.AvgPrice = (assetReport.Spent + assetReport.SoldOn) / assetReport.Count;
 
                 listAssetsReport.Add(assetReport);
             }
@@ -87,7 +89,7 @@ namespace FinancialAssets.WebApp.Services
                     asset.CurrentPrice = (decimal)coinsData.FirstOrDefault(coin => coin.Symbol == asset.Name).Price;
                     asset.ProfitPercent = GetProfitInPercent(asset.AvgPrice, asset.CurrentPrice);
                 }
-                catch
+                catch 
                 {
                     asset.CurrentPrice = 0;
                     asset.ProfitPercent = 0;
@@ -100,9 +102,16 @@ namespace FinancialAssets.WebApp.Services
 
         private IEnumerable<Currency> GetCoursesCoins(IEnumerable<string> slugList)
         {
-            var client = new CoinmarketcapClient("f4c1a066-3bab-4d95-b1a6-e766eb4ddaaa");           //todo скрыть
+            try
+            {
+                var client = new CoinmarketcapClient("f4c1a066-3bab-4d95-b1a6-e766eb4ddaaa");           //todo скрыть
 
-            return client.GetCurrencyBySymbolList(slugList.ToArray());
+                return client.GetCurrencyBySymbolList(slugList.ToArray());
+            }
+            catch
+            {
+                return new List<Currency> { new Currency() };
+            }
         }
 
         private decimal GetTotalProfit(IEnumerable<AssetReport> assets)
@@ -113,6 +122,9 @@ namespace FinancialAssets.WebApp.Services
 
         private static decimal GetProfitInPercent(decimal avgPrice, decimal currentPrice)
         {
+            if (currentPrice == 0)
+                return 0;   //значит не найдена цена и нет смысла расчитывать профит
+
             var profit = (avgPrice / currentPrice) * 100 - 100;
             return avgPrice > currentPrice ? -profit : profit;
         }

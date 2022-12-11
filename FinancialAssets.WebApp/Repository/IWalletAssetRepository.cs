@@ -5,15 +5,18 @@ namespace FinancialAssets.WebApp.Repository
     public interface IWalletAssetRepository
     {
 
-        Task<IEnumerable<Asset>> GetWaletAsset();
+        Task<IEnumerable<WalletAsset>> GetWaletAssets();
 
-        Task<IEnumerable<Asset>> GetWalletAssetByName(string name);
+        Task<WalletAsset> GetWalletAssetByKey(string coin, string wallet);
 
-        Task<Asset> GetWalletAssetById(int id);
+        Task<IEnumerable<WalletAsset>> GetWalletAssetsByCoin(string coin);
 
-        Task AddWaletAsset(Asset asset);
+        Task<IEnumerable<WalletAsset>> GetWalletAssetsByWallet(string wallet);
 
-        Task<bool> DeleteWaletAsset(int Id);
+        Task<WalletAsset> AddWaletAsset(WalletAsset asset);
 
+        Task<bool> DeleteWaletAsset(string coin, string wallet);
+
+        Task<WalletAsset> ChangeWalletAsset(WalletAsset asset);
     }
 }

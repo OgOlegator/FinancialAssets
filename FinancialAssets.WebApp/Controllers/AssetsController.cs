@@ -21,7 +21,11 @@ namespace FinancialAssets.WebApp.Controllers
             var assetForView = listAssets
                 .Where(asset => searchAsset == null || asset.Name.Contains(searchAsset));
 
-            return View(assetForView);
+            return View(new AssetViewModel
+            {
+                Assets = assetForView,
+                SearchCoin = searchAsset,
+            });
         }
 
         public async Task<IActionResult> AddAsset()
@@ -39,7 +43,6 @@ namespace FinancialAssets.WebApp.Controllers
             return View(model);
         }
 
-        //Наверное лучше если метод будет ПОСТ
         public async Task<IActionResult> AssetDelete(int id)
         {
             var asset = await _repository.GetAssetById(id);

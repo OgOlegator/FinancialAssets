@@ -10,32 +10,31 @@ namespace FinancialAssets.WebApp.Controllers
     {
         private readonly IReportBuilder _builder;
         private readonly IAssetRepository _repository;
-        private FullReport _report;
+        private readonly ICacheReport _cacheReport;
 
-        public FullReportController(IReportBuilder builder, IAssetRepository repository)
+        public FullReportController(IReportBuilder builder, IAssetRepository repository, ICacheReport cacheReport)
         {
             _builder = builder;
             _repository = repository;
+            _cacheReport = cacheReport;
         }
 
         public IActionResult ReportIndex()
         {
-            return View();
+            return View(_cacheReport.GetLastReport());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetReport()
         {
-            var listAssets = await _repository.GetAssets();
-
-            var response = await _builder.Build(listAssets);
+            var response = await _builder.Build();
 
             if(response == null || !response.IsSuccess)
                 return RedirectToAction(nameof(ReportIndex));
 
-            _report = (FullReport) response.Result;
+            _cacheReport.SetLastReport((FullReport) response.Result);
 
-            return View(response.Result);
+            return RedirectToAction(nameof(ReportIndex));
         }
     }
 }

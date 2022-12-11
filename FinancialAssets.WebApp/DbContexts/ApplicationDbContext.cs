@@ -12,6 +12,7 @@ namespace FinancialAssets.WebApp.DbContexts
         }
 
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<WalletAsset> WaletAssets { get; set; }
 
     }
 }

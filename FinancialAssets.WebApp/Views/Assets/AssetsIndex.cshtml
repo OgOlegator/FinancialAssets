@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FinancialAssets.WebApp.Models.Asset>
+﻿@model FinancialAssets.WebApp.Models.AssetViewModel
 
 @{
     ViewData["Title"] = "Assets";
@@ -6,9 +6,8 @@
 
 <p>
     <form asp-controller="Assets" asp-action="AssetsIndex">
-        Актив:        <input type="text" name="searchAsset" />
-        @*        Дата с:    <input type="text" name="searchJobTitle" />
-        Подразделение: <input type="text" name="searchSubdivision" />*@
+        Актив:        <input type="text" name="searchAsset" value="@Model.SearchCoin" />
+
         <input type="submit" value="Фильтр" />
     </form>
 </p>
@@ -23,28 +22,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.First().Name)
+                @Html.DisplayNameFor(model => model.Assets.First().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Price)
+                @Html.DisplayNameFor(model => model.Assets.First().Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Count)
+                @Html.DisplayNameFor(model => model.Assets.First().Count)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Operation)
+                @Html.DisplayNameFor(model => model.Assets.First().Operation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Date)
+                @Html.DisplayNameFor(model => model.Assets.First().Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Marketplace)
+                @Html.DisplayNameFor(model => model.Assets.First().Marketplace)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var asset in Model)
+        @foreach (var asset in Model.Assets)
         {
             <tr>
                 <td>

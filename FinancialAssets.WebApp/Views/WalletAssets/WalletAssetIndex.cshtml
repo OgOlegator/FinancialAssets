@@ -1,0 +1,57 @@
+﻿@model FinancialAssets.WebApp.Models.WalletAssetIndexViewModel
+
+@{
+    ViewData["Title"] = "WalletAssets";
+}
+
+<p>
+    <form asp-controller="WalletAssets" asp-action="WalletAssetIndex">
+        Coin:        <input type="text" name="searchCoin" value="@Model.SearchCoin" />
+        Wallet:      <input type="text" name="searchWallet" value="@Model.SearchWallet" />
+        <input type="submit" value="Фильтр" />
+    </form>
+</p>
+
+<p>
+    <div class="col text-md-center pt-1">
+        <a asp-action="AddWalletAsset" class="btn btn-outline-dark">Добавить</a>
+    </div>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Coin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Wallet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WalletAssets.First().Count)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var asset in Model.WalletAssets)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Coin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Wallet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => asset.Count)
+                </td>
+                <td>
+                    @Html.ActionLink("Change", "WalletAssetChange", new { coin = asset.Coin, wallet = asset.Wallet })
+                    @Html.ActionLink("Delete", "WalletAssetDelete", new { coin = asset.Coin, wallet = asset.Wallet })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

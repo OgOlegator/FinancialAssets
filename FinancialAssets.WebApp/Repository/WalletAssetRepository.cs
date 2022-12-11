@@ -15,6 +15,9 @@ namespace FinancialAssets.WebApp.Repository
 
         public async Task<WalletAsset> AddWaletAsset(WalletAsset asset)
         {
+            if (asset.Count < 0)
+                throw new Exception("Количество не может быть меньше нуля");
+
             var assetInDb = await _db.WaletAssets.FirstOrDefaultAsync(item => item.Coin == asset.Coin && item.Wallet == asset.Wallet);
 
             if (assetInDb == null)
@@ -31,6 +34,9 @@ namespace FinancialAssets.WebApp.Repository
 
         public async Task<WalletAsset> ChangeWalletAsset(WalletAsset asset)
         {
+            if (asset.Count < 0)
+                throw new Exception("Количество не может быть меньше нуля");
+
             var assetInDb = await _db.WaletAssets.FirstOrDefaultAsync(item => item.Coin == asset.Coin && item.Wallet == asset.Wallet);
 
             if (assetInDb == null)

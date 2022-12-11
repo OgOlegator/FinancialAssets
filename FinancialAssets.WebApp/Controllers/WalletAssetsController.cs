@@ -82,15 +82,31 @@ namespace FinancialAssets.WebApp.Controllers
             if (changeAsset == null)
                 NotFound();
 
-            return View(changeAsset);
+            return View(new WalletAssetAddViewModel
+            {
+                WalletAsset = changeAsset
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> WalletAssetChange(WalletAsset model)
+        public async Task<IActionResult> WalletAssetChange(WalletAssetAddViewModel model)
         {
             if (ModelState.IsValid)
-                await _repository.ChangeWalletAsset(model);
+            {
+                try
+                {
+                    await _repository.ChangeWalletAsset(model.WalletAsset);
+                }
+                catch (Exception ex)
+                {
+                    return View(new WalletAssetAddViewModel
+                    {
+                        WalletAsset = model.WalletAsset,
+                        Message = ex.Message
+                    });
+                }
+            }
 
             return RedirectToAction(nameof(WalletAssetIndex));
         }

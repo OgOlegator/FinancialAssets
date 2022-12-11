@@ -37,7 +37,7 @@ namespace FinancialAssets.WebApp.Repository
                 throw new ArgumentNullException("Запись актива не найдена");
             else
             {
-                _db.WaletAssets.Update(asset);
+                assetInDb.Count = asset.Count;
             }
 
             await _db.SaveChangesAsync();

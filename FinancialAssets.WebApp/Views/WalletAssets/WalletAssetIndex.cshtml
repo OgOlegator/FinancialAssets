@@ -47,6 +47,7 @@
                     @Html.DisplayFor(modelItem => asset.Count)
                 </td>
                 <td>
+                    @Html.ActionLink("Change", "WalletAssetChange", new { coin = asset.Coin, wallet = asset.Wallet })
                     @Html.ActionLink("Delete", "WalletAssetDelete", new { coin = asset.Coin, wallet = asset.Wallet })
                 </td>
             </tr>

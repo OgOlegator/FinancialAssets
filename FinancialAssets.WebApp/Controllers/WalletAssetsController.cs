@@ -54,5 +54,25 @@ namespace FinancialAssets.WebApp.Controllers
             
             return View();
         }
+
+        public async Task<IActionResult> WalletAssetChange(string coin, string wallet)
+        {
+            var changeAsset = await _repository.GetWalletAssetByKey(coin, wallet);
+
+            if (changeAsset == null)
+                NotFound();
+
+            return View(changeAsset);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WalletAssetChange(WalletAsset model)
+        {
+            if (ModelState.IsValid)
+                await _repository.ChangeWalletAsset(model);
+
+            return RedirectToAction(nameof(WalletAssetIndex));
+        }
     }
 }

@@ -8,13 +8,14 @@ namespace FinancialAssets.WebApp.Services
 {
     public class FullReportBuilder : IReportBuilder
     {
+        private const string apiKey = "CmcApiKey";
         private readonly IAssetRepository _repository;
         private readonly string _cmcApiKey;
 
         public FullReportBuilder(IAssetRepository repository, IConfiguration config)
         {
             _repository = repository;
-            _cmcApiKey = config["CmcApiKey"];
+            _cmcApiKey = config.GetValue<string>(apiKey);
         }
 
         public async Task<ResponseDto> Build()

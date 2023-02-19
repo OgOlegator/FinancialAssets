@@ -9,10 +9,12 @@ namespace FinancialAssets.WebApp.Services
     public class FullReportBuilder : IReportBuilder
     {
         private readonly IAssetRepository _repository;
+        private readonly string _cmcApiKey;
 
-        public FullReportBuilder(IAssetRepository repository)
+        public FullReportBuilder(IAssetRepository repository, IConfiguration config)
         {
             _repository = repository;
+            _cmcApiKey = config["CmcApiKey"];
         }
 
         public async Task<ResponseDto> Build()
@@ -102,9 +104,12 @@ namespace FinancialAssets.WebApp.Services
 
         private IEnumerable<Currency> GetCoursesCoins(IEnumerable<string> slugList)
         {
+            if(string.IsNullOrEmpty(_cmcApiKey))
+                return new List<Currency> { new Currency() };
+
             try
             {
-                var client = new CoinmarketcapClient("f4c1a066-3bab-4d95-b1a6-e766eb4ddaaa");           //todo скрыть
+                var client = new CoinmarketcapClient(_cmcApiKey);           //todo скрыть
 
                 return client.GetCurrencyBySymbolList(slugList.ToArray());
             }

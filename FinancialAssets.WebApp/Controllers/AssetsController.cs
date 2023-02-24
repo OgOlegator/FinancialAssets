@@ -8,10 +8,12 @@ namespace FinancialAssets.WebApp.Controllers
     public class AssetsController : Controller
     {
         private readonly IAssetRepository _repository;
+        private readonly IUploader _uploader;
 
-        public AssetsController(IAssetRepository repository)
+        public AssetsController(IAssetRepository repository, IUploader uploader)
         {
             _repository = repository;
+            _uploader = uploader;
         }
 
         public async Task<IActionResult> AssetsIndex(string searchAsset)
@@ -56,6 +58,19 @@ namespace FinancialAssets.WebApp.Controllers
             }
 
             return NotFound();
+        }
+
+        public async Task<IActionResult> UploadAssets()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadAssets(IFormFile uploadedFile)
+        {
+            await _uploader.UploadAsync(uploadedFile);
+
+            return RedirectToAction(nameof(AssetsIndex));
         }
     }
 }

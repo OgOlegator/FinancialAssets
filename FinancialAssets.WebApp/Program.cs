@@ -12,8 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options
 
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IWalletAssetRepository, WalletAssetRepository>();
-builder.Services.AddScoped<IReportBuilder, FullReportBuilder>();
+builder.Services.AddTransient<IReportBuilder, FullReportBuilder>();//AddScoped<IReportBuilder, FullReportBuilder>();
 builder.Services.AddSingleton<ICacheReport, CacheReport>();
+builder.Services.AddTransient<IUploader, CsvUploader>();
 
 builder.Services.AddControllersWithViews();
 

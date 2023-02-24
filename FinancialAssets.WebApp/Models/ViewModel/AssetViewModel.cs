@@ -1,4 +1,4 @@
-﻿namespace FinancialAssets.WebApp.Models
+﻿namespace FinancialAssets.WebApp.Models.ViewModel
 {
     public class AssetViewModel
     {

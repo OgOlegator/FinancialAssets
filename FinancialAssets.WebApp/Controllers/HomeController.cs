@@ -1,4 +1,4 @@
-﻿using FinancialAssets.WebApp.Models;
+﻿using FinancialAssets.WebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

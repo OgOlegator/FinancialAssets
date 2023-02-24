@@ -1,4 +1,5 @@
 ﻿using FinancialAssets.WebApp.Models;
+using FinancialAssets.WebApp.Models.Dtos;
 using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Services.IServices;
 using NoobsMuc.Coinmarketcap.Client;

@@ -1,5 +1,6 @@
 ﻿using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Models;
+using FinancialAssets.WebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using FinancialAssets.WebApp.Services.IServices;
 
@@ -8,9 +9,9 @@ namespace FinancialAssets.WebApp.Controllers
     public class AssetsController : Controller
     {
         private readonly IAssetRepository _repository;
-        private readonly IUploader _uploader;
+        private readonly ICsvUploader _uploader;
 
-        public AssetsController(IAssetRepository repository, IUploader uploader)
+        public AssetsController(IAssetRepository repository, ICsvUploader uploader)
         {
             _repository = repository;
             _uploader = uploader;
@@ -60,7 +61,7 @@ namespace FinancialAssets.WebApp.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> UploadAssets()
+        public async Task<IActionResult> UploadAssets(UploadAssetsViewModel? model = null)
         {
             return View();
         }
@@ -68,7 +69,22 @@ namespace FinancialAssets.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadAssets(IFormFile uploadedFile)
         {
-            await _uploader.UploadAsync(uploadedFile);
+            var response = await _uploader.Parse(uploadedFile);
+
+            var viewModel = new UploadAssetsViewModel
+            {
+                IsLoaded = true,
+                Assets = (List<Asset>) response.Result,
+                Message = response.DisplayMessage
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAssets(UploadAssetsViewModel model)
+        {
+            var response = await _uploader.Upload(model.Assets);
 
             return RedirectToAction(nameof(AssetsIndex));
         }

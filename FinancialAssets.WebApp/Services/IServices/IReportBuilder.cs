@@ -1,4 +1,4 @@
-﻿using FinancialAssets.WebApp.Models;
+﻿using FinancialAssets.WebApp.Models.Dtos;
 
 namespace FinancialAssets.WebApp.Services.IServices
 {

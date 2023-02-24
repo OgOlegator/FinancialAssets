@@ -1,4 +1,4 @@
-﻿using FinancialAssets.WebApp.Models;
+﻿using FinancialAssets.WebApp.Models.ViewModel;
 using FinancialAssets.WebApp.Repository;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;

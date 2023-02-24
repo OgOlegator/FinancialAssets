@@ -1,8 +1,86 @@
-﻿@{
+﻿@model UploadAssetsViewModel
+
+@{
     ViewData["Title"] = "Загрузка из файла";
 }
-<h3>Выберите файл для загрузки</h3>
-<form asp-action="UploadAssets" asp-controller="Assets" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile" /><br>
-    <input type="submit" value="Загрузить" />
-</form>
+
+@if (Model == null)
+{
+    <h3>Выберите файл для загрузки</h3>
+    <form asp-action="UploadAssets" asp-controller="Assets" method="post" enctype="multipart/form-data">
+        <input type="file" name="uploadedFile" /><br>
+        <input type="submit" value="Загрузить" />
+    </form>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        <p>
+            <strong>Message:</strong> <code>@Model.Message</code>
+        </p>
+    }
+
+    @if (Model.IsLoaded)
+    {
+        <h3>Данные для загрузки</h3>
+
+        <form asp-action="SaveAssets">
+            <input type="submit" value="Сохранить" />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Price)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Count)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Operation)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Date)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Assets.First().Marketplace)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var asset in Model.Assets)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Count)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Operation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => asset.Marketplace)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </form>
+    }
+}
+
+

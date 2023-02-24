@@ -1,11 +1,12 @@
 ﻿using FinancialAssets.WebApp.Models;
+using FinancialAssets.WebApp.Models.Dtos;
 using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Services.IServices;
 using System.IO;
 
 namespace FinancialAssets.WebApp.Services
 {
-    public class CsvUploader : IUploader
+    public class CsvUploader : ICsvUploader
     {
         private readonly IAssetRepository _repository;
         
@@ -14,31 +15,35 @@ namespace FinancialAssets.WebApp.Services
             _repository = repository; 
         }
 
-        public async Task<bool> UploadAsync(IFormFile uploadedFile)
+        public async Task<ResponseDto> Parse(IFormFile uploadedFile)
         {
-            var assetList = new List<Asset>();
-
             byte[] fileData;
 
             using (var fileStream = uploadedFile.OpenReadStream())
             {
-                fileData = new byte[fileStream.Length];
-                await fileStream.ReadAsync(fileData, 0, (int)fileStream.Length);
+                try
+                {
+                    fileData = new byte[fileStream.Length];
+                    await fileStream.ReadAsync(fileData, 0, (int)fileStream.Length);
+                }
+                catch (Exception ex)
+                {
+                    return new ResponseDto
+                    {
+                        IsSuccess = false,
+                        ErrorMessages = ex.ToString(),
+                        DisplayMessage = ex.Message
+                    };
+                }
             }
 
             var dataLines = System.Text.Encoding.ASCII.GetString(fileData).Split("\r\n");
 
-            if (dataLines.Length == 0)
-            {
-                return true;
-            }
+            var assetList = new List<Asset>();
 
-            for(var i = 1; i < dataLines.Length; i++)
+            for (var i = 1; i < dataLines.Length; i++)
             {
                 var lineItems = dataLines[i].Split(";");
-
-                var date = string.IsNullOrEmpty(lineItems[4]) ? DateTime.Now : DateTime.Parse(lineItems[4]);
-                var count = decimal.Parse(lineItems[2]);
 
                 assetList.Add(new Asset
                 {
@@ -51,10 +56,36 @@ namespace FinancialAssets.WebApp.Services
                 });
             }
 
-            foreach (var asset in assetList)
-                await _repository.AddAsset(asset);
+            return new ResponseDto
+            {
+                IsSuccess = true,
+                Result = assetList
+            };
+        }
 
-            return true;
+        public async Task<ResponseDto> Upload(object data)
+        {
+            try
+            {
+                foreach (var asset in (List<Asset>)data)
+                {
+                    await _repository.AddAsset(asset);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto
+                {
+                    IsSuccess = false,
+                    ErrorMessages = ex.ToString(),
+                    DisplayMessage = ex.Message
+                };
+            }
+
+            return new ResponseDto
+            {
+                IsSuccess = true,
+            };
         }
     }
 }

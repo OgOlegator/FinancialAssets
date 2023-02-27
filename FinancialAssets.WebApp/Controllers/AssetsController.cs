@@ -65,7 +65,8 @@ namespace FinancialAssets.WebApp.Controllers
         }
 
         //todo Можно привести таблицу с ошибочными записями и указать их
-        //На странице Upload надо обрабатывать ошибки при парсинге, выводить сообщение
+        //Добавить сервис проверки файла на формат 
+
 
         public IActionResult Upload(UploadViewModel? model = null)
         {
@@ -78,6 +79,14 @@ namespace FinancialAssets.WebApp.Controllers
             try
             {
                 var response = await _parser.Parse(uploadedFile);
+
+                if(!response.IsSuccess)
+                {
+                    return Upload(new UploadViewModel
+                    {
+                        Message = response.DisplayMessage,
+                    });
+                }
 
                 var viewModel = new SaveViewModel
                 {

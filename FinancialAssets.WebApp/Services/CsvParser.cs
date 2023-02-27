@@ -32,7 +32,7 @@ namespace FinancialAssets.WebApp.Services
                     {
                         IsSuccess = false,
                         ErrorMessages = ex.ToString(),
-                        DisplayMessage = ex.Message
+                        DisplayMessage = "Некорректный файл"
                     };
                 }
             }

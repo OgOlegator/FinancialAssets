@@ -6,11 +6,11 @@ using System.IO;
 
 namespace FinancialAssets.WebApp.Services
 {
-    public class CsvUploader : ICsvUploader
+    public class CsvParser : IParser
     {
         private readonly IAssetRepository _repository;
         
-        public CsvUploader(IAssetRepository repository)
+        public CsvParser(IAssetRepository repository)
         {
             _repository = repository; 
         }
@@ -63,29 +63,5 @@ namespace FinancialAssets.WebApp.Services
             };
         }
 
-        public async Task<ResponseDto> Upload(object data)
-        {
-            try
-            {
-                foreach (var asset in (List<Asset>)data)
-                {
-                    await _repository.AddAsset(asset);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto
-                {
-                    IsSuccess = false,
-                    ErrorMessages = ex.ToString(),
-                    DisplayMessage = ex.Message
-                };
-            }
-
-            return new ResponseDto
-            {
-                IsSuccess = true,
-            };
-        }
     }
 }

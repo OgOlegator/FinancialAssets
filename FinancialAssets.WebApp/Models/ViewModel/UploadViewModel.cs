@@ -1,6 +1,6 @@
 ﻿namespace FinancialAssets.WebApp.Models.ViewModel
 {
-    public class UploadAssetsViewModel
+    public class UploadViewModel
     {
         public bool IsLoaded { get; set; } = false;
 

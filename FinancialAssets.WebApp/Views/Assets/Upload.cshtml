@@ -1,0 +1,19 @@
+﻿@model UploadViewModel
+
+@{
+    ViewData["Title"] = "Загрузка из файла";
+}
+
+
+<h3>Выберите файл для загрузки</h3>
+<form asp-action="Save" asp-controller="Assets" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile" /><br>
+    <input type="submit" value="Загрузить" />
+</form>
+
+@if (Model != null && !string.IsNullOrWhiteSpace(Model.Message))
+{
+    <p>
+        <strong>Message:</strong> <code>@Model.Message</code>
+    </p>
+}

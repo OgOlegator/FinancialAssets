@@ -2,10 +2,8 @@
 
 namespace FinancialAssets.WebApp.Services.IServices
 {
-    public interface ICsvUploader
+    public interface IUploader
     {
-
-        public Task<ResponseDto> Parse(IFormFile uploadedFile);
 
         public Task<ResponseDto> Upload(object data);
 

@@ -14,7 +14,8 @@ builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IWalletAssetRepository, WalletAssetRepository>();
 builder.Services.AddTransient<IReportBuilder, FullReportBuilder>();//AddScoped<IReportBuilder, FullReportBuilder>();
 builder.Services.AddSingleton<ICacheReport, CacheReport>();
-builder.Services.AddTransient<ICsvUploader, CsvUploader>();
+builder.Services.AddTransient<IParser, CsvParser>();
+builder.Services.AddTransient<IUploader, AssetsUploader>();
 
 builder.Services.AddControllersWithViews();
 

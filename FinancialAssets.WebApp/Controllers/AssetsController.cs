@@ -64,16 +64,13 @@ namespace FinancialAssets.WebApp.Controllers
             return NotFound();
         }
 
-        //todo Можно привести таблицу с ошибочными записями и указать их
-
-
-        public IActionResult Upload(UploadViewModel? model = null)
+        public IActionResult Upload(UploadViewModel model = null)
         {
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(IFormFile uploadedFile)
+        public async Task<IActionResult> Parse(IFormFile uploadedFile)
         {
             try
             {
@@ -81,39 +78,33 @@ namespace FinancialAssets.WebApp.Controllers
 
                 if(!response.IsSuccess)
                 {
-                    return Upload(new UploadViewModel
-                    {
-                        Message = response.DisplayMessage,
-                    });
+                    return RedirectToAction(nameof(Upload), new UploadViewModel { Message = response.DisplayMessage });
                 }
 
-                var viewModel = new SaveViewModel
+                var viewModel = new ParseViewModel
                 {
                     Assets = (List<Asset>)response.Result,
                     Message = response.DisplayMessage
                 };
 
-                ViewBag.Assets = response.Result;
-
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                return Upload(new UploadViewModel
-                {
-                    Message = ex.Message,
-                });
+                return RedirectToAction(nameof(Upload), new UploadViewModel { Message = "Ошибка при чтении файла" });
             }
         }
 
-        //[HttpPost]
-        public async Task<IActionResult> Save(SaveViewModel model)
+        [HttpPost]
+        public async Task<IActionResult> Save(ParseViewModel model)
         {
-            var response = await _uploader.Upload(ViewBag.Assets);
+            var response = await _uploader.Upload(model.Assets);
 
-            return Upload(new UploadViewModel
+            return View(new SaveViewModel
             {
                 Message = response.DisplayMessage,
+                IsSave  = response.IsSuccess,
+                ErrorAssets = (List<Asset>) response.Result
             });
         }
     }

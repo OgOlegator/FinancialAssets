@@ -22,31 +22,40 @@ namespace FinancialAssets.WebApp.Services
 
         public async Task<ResponseDto> Upload(object data)
         {
-            try
+            using (var transactionDb = _dbContext.Database.BeginTransaction())
             {
-                using (var transactionDb = _dbContext.Database.BeginTransaction())
+                var errorAssets = new List<Asset>();
+
+                foreach (var asset in (List<Asset>)data)
                 {
-                    foreach (var asset in (List<Asset>)data)
+                    try
+                    {
                         await _assetRepository.AddAsset(asset);
+                    }
+                    catch 
+                    {
+                        errorAssets.Add(asset);
 
-                    Task.WaitAll();
-
-                    await transactionDb.CommitAsync();
+                        continue;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto
-                {
-                    IsSuccess = false,
-                    ErrorMessages = ex.ToString(),
-                    DisplayMessage = ex.Message
-                };
-            }
 
+                if(errorAssets.Count > 0)
+                    return new ResponseDto
+                    {
+                        IsSuccess = false,
+                        DisplayMessage = "Не удалось загрузить файл. Ошибка в данных",
+                        Result = errorAssets
+                    };
+
+                Task.WaitAll();
+                await transactionDb.CommitAsync();
+            }
+            
             return new ResponseDto
             {
                 IsSuccess = true,
+                DisplayMessage = "Загрузка выполнена успешно"
             };
         }
     }

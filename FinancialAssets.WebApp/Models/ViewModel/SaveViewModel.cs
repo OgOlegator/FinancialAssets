@@ -2,8 +2,12 @@
 {
     public class SaveViewModel
     {
-        public List<Asset> Assets { get; set; }
+
+        public List<Asset> ErrorAssets { get; set; }
 
         public string? Message { get; set; } = "";
+
+        public bool IsSave { get; set; } = false;
+
     }
 }

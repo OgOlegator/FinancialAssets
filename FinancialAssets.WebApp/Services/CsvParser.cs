@@ -9,22 +9,19 @@ namespace FinancialAssets.WebApp.Services
 {
     public class CsvParser : IParser
     {
-        private readonly IAssetRepository _repository;
-
         private readonly List<string> _fileTypes = new List<string> { "csv",  };
         
-        public CsvParser(IAssetRepository repository)
+        public CsvParser()
         {
-            _repository = repository; 
         }
 
         public async Task<ResponseDto> Parse(IFormFile uploadedFile)
         {
-            if(!_fileTypes.Contains(uploadedFile.ContentType.Split("//").Last()))
+            if(!_fileTypes.Contains(uploadedFile.ContentType.Split("/").Last()))
                 return new ResponseDto
                 {
                     IsSuccess = false,
-                    DisplayMessage = "Неподдерживаемый тип файла"
+                    DisplayMessage = "Ошибка. Неподдерживаемый тип файла"
                 };
 
             byte[] fileData;
@@ -42,7 +39,7 @@ namespace FinancialAssets.WebApp.Services
                     {
                         IsSuccess = false,
                         ErrorMessages = ex.ToString(),
-                        DisplayMessage = "Некорректный файл"
+                        DisplayMessage = "Ошибка при чтении файла"
                     };
                 }
             }
@@ -53,17 +50,29 @@ namespace FinancialAssets.WebApp.Services
 
             for (var i = 1; i < dataLines.Length; i++)
             {
-                var lineItems = dataLines[i].Split(";");
-
-                assetList.Add(new Asset
+                try
                 {
-                    Name = lineItems[0],
-                    Price = decimal.Parse(lineItems[1]),
-                    Count = decimal.Parse(lineItems[2]),
-                    Operation = lineItems[3],
-                    Date = string.IsNullOrEmpty(lineItems[4]) ? DateTime.Now : DateTime.Parse(lineItems[4]),
-                    Marketplace = lineItems[5]
-                });
+                    var lineItems = dataLines[i].Split(";");
+
+                    assetList.Add(new Asset
+                    {
+                        Name = lineItems[0],
+                        Price = decimal.Parse(lineItems[1]),
+                        Count = decimal.Parse(lineItems[2]),
+                        Operation = lineItems[3],
+                        Date = string.IsNullOrEmpty(lineItems[4]) ? DateTime.Now : DateTime.Parse(lineItems[4]),
+                        Marketplace = lineItems[5]
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return new ResponseDto
+                    {
+                        IsSuccess = false,
+                        ErrorMessages = ex.ToString(),
+                        DisplayMessage = $"Ошибка при чтении файла. См. строку {i + 1}"
+                    };
+                }
             }
 
             return new ResponseDto

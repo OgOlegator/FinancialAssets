@@ -2,6 +2,7 @@
 using FinancialAssets.WebApp.Models.Dtos;
 using FinancialAssets.WebApp.Repository;
 using FinancialAssets.WebApp.Services.IServices;
+using Microsoft.AspNetCore.Connections;
 using System.IO;
 
 namespace FinancialAssets.WebApp.Services
@@ -9,6 +10,8 @@ namespace FinancialAssets.WebApp.Services
     public class CsvParser : IParser
     {
         private readonly IAssetRepository _repository;
+
+        private readonly List<string> _fileTypes = new List<string> { "csv",  };
         
         public CsvParser(IAssetRepository repository)
         {
@@ -17,6 +20,13 @@ namespace FinancialAssets.WebApp.Services
 
         public async Task<ResponseDto> Parse(IFormFile uploadedFile)
         {
+            if(!_fileTypes.Contains(uploadedFile.ContentType.Split("//").Last()))
+                return new ResponseDto
+                {
+                    IsSuccess = false,
+                    DisplayMessage = "Неподдерживаемый тип файла"
+                };
+
             byte[] fileData;
 
             using (var fileStream = uploadedFile.OpenReadStream())

@@ -65,7 +65,6 @@ namespace FinancialAssets.WebApp.Controllers
         }
 
         //todo Можно привести таблицу с ошибочными записями и указать их
-        //Добавить сервис проверки файла на формат 
 
 
         public IActionResult Upload(UploadViewModel? model = null)
@@ -107,7 +106,7 @@ namespace FinancialAssets.WebApp.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public async Task<IActionResult> Save(SaveViewModel model)
         {
             var response = await _uploader.Upload(ViewBag.Assets);

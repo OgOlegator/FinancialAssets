@@ -4,6 +4,8 @@ using FinancialAssets.WebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using FinancialAssets.WebApp.Services.IServices;
 using Azure;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections.Generic;
 
 namespace FinancialAssets.WebApp.Controllers
 {
@@ -12,12 +14,14 @@ namespace FinancialAssets.WebApp.Controllers
         private readonly IAssetRepository _repository;
         private readonly IParser _parser;
         private readonly IUploader _uploader;
+        private readonly ICache _cache;
 
-        public AssetsController(IAssetRepository repository, IParser parser, IUploader uploader)
+        public AssetsController(IAssetRepository repository, IParser parser, IUploader uploader, ICache cache)
         {
             _repository = repository;
             _parser = parser;
             _uploader = uploader;
+            _cache = cache;
         }
 
         public async Task<IActionResult> AssetsIndex(string searchAsset)
@@ -87,6 +91,8 @@ namespace FinancialAssets.WebApp.Controllers
                     Message = response.DisplayMessage
                 };
 
+                _cache.Set("UploadAssets", response.Result);
+
                 return View(viewModel);
             }
             catch (Exception ex)
@@ -96,9 +102,27 @@ namespace FinancialAssets.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(ParseViewModel model)
+        public async Task<IActionResult> Save()
         {
-            var response = await _uploader.Upload(model.Assets);
+            List<Asset> assets;
+
+            try
+            {
+                assets = (List<Asset>) _cache.Get("UploadAssets");
+            }
+            catch
+            {
+                return View(new SaveViewModel
+                {
+                    Message = "Ошибка при сохранении",
+                    IsSave = false,
+                });
+            }
+
+            var response = await _uploader.Upload(assets);
+
+            //Очистка кэша, т.к. больше не требуется хранить данные загружаемых активов
+            _cache.Set("UploadAssets", null);
 
             return View(new SaveViewModel
             {

@@ -22,6 +22,13 @@ namespace FinancialAssets.WebApp.Services
 
         public async Task<ResponseDto> Upload(object data)
         {
+            if(data == null)
+                return new ResponseDto
+                {
+                    IsSuccess = false,
+                    DisplayMessage = "Не удалось загрузить файл. data == null"
+                };
+
             using (var transactionDb = _dbContext.Database.BeginTransaction())
             {
                 var errorAssets = new List<Asset>();

@@ -10,9 +10,9 @@ namespace FinancialAssets.WebApp.Controllers
     {
         private readonly IReportBuilder _builder;
         private readonly IAssetRepository _repository;
-        private readonly ICacheReport _cacheReport;
+        private readonly ICache _cacheReport;
 
-        public FullReportController(IReportBuilder builder, IAssetRepository repository, ICacheReport cacheReport)
+        public FullReportController(IReportBuilder builder, IAssetRepository repository, ICache cacheReport)
         {
             _builder = builder;
             _repository = repository;
@@ -21,7 +21,7 @@ namespace FinancialAssets.WebApp.Controllers
 
         public IActionResult ReportIndex()
         {
-            return View(_cacheReport.GetLastReport());
+            return View(_cacheReport.Get("FullReport"));
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace FinancialAssets.WebApp.Controllers
             if(response == null || !response.IsSuccess)
                 return RedirectToAction(nameof(ReportIndex));
 
-            _cacheReport.SetLastReport((FullReport) response.Result);
+            _cacheReport.Set("FullReport", response.Result);
 
             return RedirectToAction(nameof(ReportIndex));
         }

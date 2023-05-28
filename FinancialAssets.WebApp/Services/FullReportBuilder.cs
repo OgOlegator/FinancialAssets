@@ -32,8 +32,16 @@ namespace FinancialAssets.WebApp.Services
                     Assets = assetsReport.ToList(),
                     TotalSpent = assetsReport.Sum(row => row.Spent),
                     TotalSoldOn = assetsReport.Sum(row => row.SoldOn),
-                    ProfitPercent = GetTotalProfit(assetsReport),
+                    //ProfitPercent = GetTotalProfit(assetsReport),
                 };
+
+                fullReport.AbsoluteProfit = GetAbsoluteProfit(
+                    fullReport.Assets.Sum(asset => asset.AvgPrice * asset.Count),
+                    fullReport.Assets.Sum(asset => asset.CurrentPrice * asset.Count));
+
+                fullReport.ProfitPercent = GetProcentProfit(
+                    fullReport.AbsoluteProfit,
+                    fullReport.Assets.Sum(asset => asset.AvgPrice * asset.Count));
 
                 return new ResponseDto
                 {
@@ -79,7 +87,7 @@ namespace FinancialAssets.WebApp.Services
 
                 //Учитываем возможное деление на 0
                 if(assetReport.Count != 0)
-                    assetReport.AvgPrice = (assetReport.Spent + assetReport.SoldOn) / assetReport.Count;
+                    assetReport.AvgPrice = (assetReport.Spent - assetReport.SoldOn) / assetReport.Count;
 
                 listAssetsReport.Add(assetReport);
             }
@@ -91,7 +99,6 @@ namespace FinancialAssets.WebApp.Services
                 try
                 {
                     asset.CurrentPrice = (decimal)coinsData.FirstOrDefault(coin => coin.Symbol == asset.Name).Price;
-                    asset.ProfitPercent = GetProfitInPercent(asset.AvgPrice, asset.CurrentPrice);
                 }
                 catch 
                 {
@@ -99,6 +106,9 @@ namespace FinancialAssets.WebApp.Services
                     asset.ProfitPercent = 0;
                     continue;
                 }
+
+                asset.AbsoluteProfit = GetAbsoluteProfit(asset.AvgPrice * asset.Count, asset.CurrentPrice * asset.Count);
+                asset.ProfitPercent  = GetProcentProfit(asset.AbsoluteProfit, asset.AvgPrice * asset.Count);
             }
 
             return listAssetsReport;
@@ -121,19 +131,39 @@ namespace FinancialAssets.WebApp.Services
             }
         }
 
-        private decimal GetTotalProfit(IEnumerable<AssetReport> assets)
-            => GetProfitInPercent(
-                assets.Sum(asset => asset.AvgPrice * asset.Count), 
-                assets.Sum(asset => asset.CurrentPrice * asset.Count));
-        
-
-        private static decimal GetProfitInPercent(decimal avgPrice, decimal currentPrice)
+        /// <summary>
+        /// Абсолютная доходнасть в долларах
+        /// </summary>
+        /// <param name="avgPrice">Стоимость активов по средней цене</param>
+        /// <param name="currentPrice">Стоимость активов по текущей цене</param>
+        private static decimal GetAbsoluteProfit(
+            decimal avgPrice,
+            decimal currentPrice)
         {
-            if (currentPrice == 0)
+            if (currentPrice == 0 || avgPrice == 0)
+            {
                 return 0;   //значит не найдена цена и нет смысла расчитывать профит
+            }
 
-            var profit = (avgPrice / currentPrice) * 100 - 100;
-            return avgPrice > currentPrice ? -profit : profit;
+            return currentPrice - avgPrice;
+        }
+
+        /// <summary>
+        /// Относительная доходность в процентах
+        /// </summary>
+        /// <param name="absoluteProfit">Абсолютная доходнасть</param>
+        /// <param name="avgPrice">Стоимость активов по средней цене</param>
+        /// <returns></returns>
+        private static decimal GetProcentProfit(
+            decimal absoluteProfit,
+            decimal avgPrice)
+        {
+            if (avgPrice == 0)
+            {
+                return 0;   //значит не найдена цена и нет смысла расчитывать профит
+            }
+
+            return absoluteProfit / avgPrice * 100;
         }
     }
 }

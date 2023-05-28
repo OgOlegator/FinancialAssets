@@ -12,8 +12,11 @@ namespace FinancialAssets.WebApp.Models
         [Display(Name = "Продаж на сумму")]
         public decimal TotalSoldOn { get; set; }
 
-        [Display(Name = "Profit")]
-        public decimal ProfitPercent { get; set; }  //Разница цен покупки и текущей по всему портфелю
+        [Display(Name = "Прибыль в процентах")]
+        public decimal ProfitPercent { get; set; }  //Разница цен покупки и текущей по всему портфелю в процентах
+
+        [Display(Name = "Прибыль в долларах")]
+        public decimal AbsoluteProfit { get; set; }  //Разница цен покупки и текущей по всему портфелю в долларах
     }
 
     public class AssetReport
@@ -30,8 +33,11 @@ namespace FinancialAssets.WebApp.Models
         [Display(Name = "Текущая цена")]
         public decimal CurrentPrice { get; set; }
 
-        [Display(Name = "Profit")]
+        [Display(Name = "Прибыль в процентах")]
         public decimal ProfitPercent { get; set; }
+
+        [Display(Name = "Прибыль в долларах")]
+        public decimal AbsoluteProfit { get; set; }
 
         [Display(Name = "Потрачено средств")]
         public decimal Spent { get; set; }

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Загрузка из файла";
 }
 
-<h3>Выберите файл для загрузки</h3>
+<h3>Загрузка</h3>
 
 @if (Model != null && !string.IsNullOrWhiteSpace(Model.Message))
 {
@@ -22,5 +22,21 @@
     <br />
     <input type="submit" value="Загрузить" />
 </form>
+
+<br />
+
+<a>Примечения:</a>
+<li>
+    <a>Разделитель csv - ;</a>
+</li>
+<li>
+    <a>Разделитель десятичной части - ,</a>
+</li>
+<li>
+    <a>Покупка - Buy</a>
+</li>
+<li>
+    <a>Продажа - Sale</a>
+</li>
 
 
